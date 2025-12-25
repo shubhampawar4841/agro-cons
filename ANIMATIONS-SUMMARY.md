@@ -99,3 +99,4 @@
 - Mobile-friendly with proper touch targets
 - Smooth 60fps animations using GPU acceleration
 
+

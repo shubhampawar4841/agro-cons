@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!;
 
@@ -24,7 +25,6 @@ export interface Product {
   price: number;
   weight: string;
   image_url: string;
-  images?: string[] | null;
   stock_quantity: number;
   is_active: boolean;
   ingredients: string[] | null;
