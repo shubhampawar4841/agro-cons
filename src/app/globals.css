@@ -109,3 +109,30 @@ h1, h2, h3, h4, h5, h6 {
 .animate-road-move {
   animation: road-move 1.4s linear infinite;
 }
+
+/* Mobile-friendly improvements */
+@media (max-width: 640px) {
+  /* Ensure touch targets are at least 44px */
+  button, a, input[type="button"], input[type="submit"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent text size adjustment on iOS */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+  
+  /* Better spacing for mobile */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Safe area for mobile devices with notches */
+@supports (padding: max(0px)) {
+  .safe-area-inset-bottom {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}

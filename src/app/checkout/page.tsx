@@ -323,9 +323,9 @@ export default function CheckoutPage() {
         </h1>
 
         <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
             {/* Address Form */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
               <div className="bg-white border border-gray-200 rounded-lg p-6">
                 <h2 className="font-heading font-semibold text-xl text-gray-900 mb-6">
                   Delivery Address
@@ -408,7 +408,7 @@ export default function CheckoutPage() {
                       required
                       value={formData.name}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d5016] focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d5016] focus:border-transparent text-base"
                       placeholder="Enter your full name"
                     />
                   </div>
@@ -423,7 +423,7 @@ export default function CheckoutPage() {
                       required
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d5016] focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d5016] focus:border-transparent text-base"
                       placeholder="10-digit mobile number"
                       pattern="[0-9]{10}"
                     />
@@ -439,7 +439,7 @@ export default function CheckoutPage() {
                       required
                       value={formData.pincode}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d5016] focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d5016] focus:border-transparent text-base"
                       placeholder="6-digit pincode"
                       pattern="[0-9]{6}"
                     />
@@ -455,7 +455,7 @@ export default function CheckoutPage() {
                       required
                       value={formData.address_line1}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d5016] focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d5016] focus:border-transparent text-base"
                       placeholder="House/Flat No., Building, Street, Area"
                     />
                   </div>
@@ -469,12 +469,12 @@ export default function CheckoutPage() {
                       name="address_line2"
                       value={formData.address_line2}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d5016] focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d5016] focus:border-transparent text-base"
                       placeholder="Landmark, Area (Optional)"
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         City *
@@ -485,7 +485,7 @@ export default function CheckoutPage() {
                         required
                         value={formData.city}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d5016] focus:border-transparent"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d5016] focus:border-transparent text-base"
                         placeholder="City"
                       />
                     </div>
@@ -500,7 +500,7 @@ export default function CheckoutPage() {
                         required
                         value={formData.state}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d5016] focus:border-transparent"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d5016] focus:border-transparent text-base"
                         placeholder="State"
                       />
                     </div>
@@ -579,8 +579,8 @@ export default function CheckoutPage() {
             </div>
 
             {/* Order Summary */}
-            <div className="lg:col-span-1">
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 sticky top-24">
+            <div className="lg:col-span-1 order-first lg:order-last">
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-6 lg:sticky lg:top-24">
                 <h2 className="font-heading font-semibold text-xl text-gray-900 mb-4">
                   Order Summary
                 </h2>
@@ -613,7 +613,7 @@ export default function CheckoutPage() {
 
                 <button
                   type="submit"
-                  className="w-full px-6 py-4 bg-[#2d5016] text-white rounded-lg font-heading font-semibold text-lg hover:bg-[#1f3509] shadow-lg hover:shadow-xl transition-all"
+                  className="w-full px-6 py-4 bg-[#2d5016] text-white rounded-lg font-heading font-semibold text-base sm:text-lg hover:bg-[#1f3509] shadow-lg hover:shadow-xl transition-all min-h-[48px]"
                 >
                   Pay Now
                 </button>

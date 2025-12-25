@@ -100,25 +100,25 @@ export default function AdminAnalyticsPage() {
       <Navbar />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8 flex justify-between items-center">
+        <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="font-heading text-3xl md:text-4xl font-bold text-[#2d5016] mb-2">
+            <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-[#2d5016] mb-2">
               Analytics Dashboard
             </h1>
-            <p className="text-gray-600">
+            <p className="text-sm sm:text-base text-gray-600">
               Sales insights and product performance
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
             <Link
               href="/admin/orders"
-              className="px-6 py-3 border-2 border-[#2d5016] text-[#2d5016] rounded-lg font-heading font-semibold hover:bg-[#2d5016] hover:text-white transition-all"
+              className="px-4 sm:px-6 py-2.5 sm:py-3 border-2 border-[#2d5016] text-[#2d5016] rounded-lg font-heading font-semibold hover:bg-[#2d5016] hover:text-white transition-all text-center text-sm sm:text-base min-h-[44px] flex items-center justify-center"
             >
               View Orders
             </Link>
             <Link
               href="/admin/products"
-              className="px-6 py-3 bg-[#2d5016] text-white rounded-lg font-heading font-semibold hover:bg-[#1f3509] transition-all"
+              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-[#2d5016] text-white rounded-lg font-heading font-semibold hover:bg-[#1f3509] transition-all text-center text-sm sm:text-base min-h-[44px] flex items-center justify-center"
             >
               Manage Products
             </Link>
@@ -126,7 +126,7 @@ export default function AdminAnalyticsPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -171,13 +171,13 @@ export default function AdminAnalyticsPage() {
         </div>
 
         {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8">
           {/* Sales Chart */}
           <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
             <h2 className="font-heading font-bold text-xl text-gray-900 mb-4">
               Sales Trend (Last 6 Months)
             </h2>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={250} className="sm:h-[300px]">
               <LineChart data={analytics.salesChart}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                 <XAxis 
@@ -215,7 +215,7 @@ export default function AdminAnalyticsPage() {
             <h2 className="font-heading font-bold text-xl text-gray-900 mb-4">
               Top Selling Products
             </h2>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={250} className="sm:h-[300px]">
               <BarChart 
                 data={analytics.topProducts}
                 layout="vertical"
@@ -254,21 +254,22 @@ export default function AdminAnalyticsPage() {
         </div>
 
         {/* Top Products Table */}
-        <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
-          <h2 className="font-heading font-bold text-xl text-gray-900 mb-4">
+        <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-6">
+          <h2 className="font-heading font-bold text-lg sm:text-xl text-gray-900 mb-4">
             Product Performance Details
           </h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <div className="inline-block min-w-full align-middle px-4 sm:px-0">
+              <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Product Name
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Quantity Sold
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Revenue
                   </th>
                 </tr>
@@ -276,13 +277,13 @@ export default function AdminAnalyticsPage() {
               <tbody className="bg-white divide-y divide-gray-200">
                 {analytics.topProducts.map((product, index) => (
                   <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{product.name}</div>
+                    <td className="px-3 sm:px-6 py-4">
+                      <div className="text-sm font-medium text-gray-900 break-words">{product.name}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">{product.quantity} units</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-semibold text-[#2d5016]">
                         ₹{product.revenue.toLocaleString()}
                       </div>
@@ -291,6 +292,7 @@ export default function AdminAnalyticsPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       </div>

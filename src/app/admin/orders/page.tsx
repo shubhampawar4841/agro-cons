@@ -169,25 +169,25 @@ export default function AdminOrdersPage() {
       <Navbar />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8 flex justify-between items-center">
+        <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="font-heading text-3xl md:text-4xl font-bold text-[#2d5016] mb-2">
+            <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-[#2d5016] mb-2">
               All Orders
             </h1>
-            <p className="text-gray-600">
+            <p className="text-sm sm:text-base text-gray-600">
               Manage all customer orders
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
             <Link
               href="/admin/analytics"
-              className="px-6 py-3 border-2 border-[#2d5016] text-[#2d5016] rounded-lg font-heading font-semibold hover:bg-[#2d5016] hover:text-white transition-all"
+              className="px-4 sm:px-6 py-2.5 sm:py-3 border-2 border-[#2d5016] text-[#2d5016] rounded-lg font-heading font-semibold hover:bg-[#2d5016] hover:text-white transition-all text-center text-sm sm:text-base min-h-[44px] flex items-center justify-center"
             >
               Analytics
             </Link>
             <Link
               href="/admin/products"
-              className="px-6 py-3 bg-[#2d5016] text-white rounded-lg font-heading font-semibold hover:bg-[#1f3509]"
+              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-[#2d5016] text-white rounded-lg font-heading font-semibold hover:bg-[#1f3509] text-center text-sm sm:text-base min-h-[44px] flex items-center justify-center"
             >
               Manage Products
             </Link>
@@ -199,7 +199,7 @@ export default function AdminOrdersPage() {
             <p className="text-gray-600">No orders found</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {orders.map((order) => (
               <div
                 key={order.id}
@@ -298,20 +298,20 @@ export default function AdminOrdersPage() {
         {/* Order Details Modal */}
         {selectedOrder && (
           <div 
-            className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-2 sm:p-4"
             onClick={() => setSelectedOrder(null)}
           >
             <div 
-              className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
-              <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
-                <div>
-                  <h2 className="font-heading font-bold text-2xl text-gray-900">
+              <div className="sticky top-0 bg-white border-b border-gray-200 p-4 sm:p-6 flex items-center justify-between">
+                <div className="flex-1 min-w-0 pr-4">
+                  <h2 className="font-heading font-bold text-lg sm:text-2xl text-gray-900 truncate">
                     Order #{selectedOrder.order_number}
                   </h2>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-xs sm:text-sm text-gray-500 mt-1">
                     {new Date(selectedOrder.created_at).toLocaleDateString('en-IN', {
                       year: 'numeric',
                       month: 'long',
@@ -323,7 +323,8 @@ export default function AdminOrdersPage() {
                 </div>
                 <button
                   onClick={() => setSelectedOrder(null)}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                  className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                  aria-label="Close modal"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -332,9 +333,9 @@ export default function AdminOrdersPage() {
               </div>
 
               {/* Modal Content */}
-              <div className="p-6 space-y-6">
+              <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
                 {/* Order Status & Amount */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="bg-gray-50 rounded-lg p-4">
                     <p className="text-sm text-gray-600 mb-1">Status</p>
                     <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${getStatusColor(selectedOrder.status)}`}>

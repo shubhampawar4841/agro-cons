@@ -58,27 +58,27 @@ export default function Home() {
               <div className="inline-block mb-4 px-4 py-2 bg-[#2d5016]/10 rounded-full border border-[#2d5016]/20">
                 <span className="text-sm font-semibold text-[#2d5016]">🌱 100% Organic & Lab Tested</span>
               </div>
-              <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-[#2d5016] mb-6 leading-tight">
+              <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#2d5016] mb-4 sm:mb-6 leading-tight">
                 Pure, Organic & Lab Tested Agro Products from{' '}
                 <span className="text-[#4a7c2a]">AGRICORNS</span>
               </h1>
-              <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl text-gray-700 mb-6 sm:mb-8 leading-relaxed">
                 Discover premium quality organic products sourced directly from Indian farms. 
                 Every product is lab tested for purity and quality assurance.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <Link
                   href="/products"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-[#2d5016] to-[#4a7c2a] text-white rounded-xl font-heading font-semibold text-lg hover:from-[#1f3509] hover:to-[#2d5016] shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 active:scale-95"
+                  className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#2d5016] to-[#4a7c2a] text-white rounded-xl font-heading font-semibold text-base sm:text-lg hover:from-[#1f3509] hover:to-[#2d5016] shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 active:scale-95 min-h-[48px]"
                 >
                   Shop Now
-                  <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="ml-2 w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </Link>
                 <Link
                   href="/about"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-white border-2 border-[#2d5016] text-[#2d5016] rounded-xl font-heading font-semibold text-lg hover:bg-[#2d5016] hover:text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-white border-2 border-[#2d5016] text-[#2d5016] rounded-xl font-heading font-semibold text-base sm:text-lg hover:bg-[#2d5016] hover:text-white shadow-lg hover:shadow-xl transition-all duration-300 min-h-[48px]"
                 >
                   Learn More
                 </Link>
@@ -99,9 +99,9 @@ export default function Home() {
       </section>
 
       {/* Trust Icons Section */}
-      <section className="py-16 bg-white border-y border-gray-100">
+      <section className="py-12 sm:py-16 bg-white border-y border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 md:gap-12">
             <TrustBadge icon="🌿" label="100% Organic" />
             <TrustBadge icon="🔬" label="Lab Tested" />
             <TrustBadge icon="🇮🇳" label="Made in India" />
@@ -111,16 +111,16 @@ export default function Home() {
       </section>
 
       {/* Featured Products Section */}
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-12 sm:py-20 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div className="inline-block mb-4 px-4 py-2 bg-[#2d5016]/10 rounded-full border border-[#2d5016]/20">
-              <span className="text-sm font-semibold text-[#2d5016]">Our Best Sellers</span>
+          <div className="text-center mb-10 sm:mb-16">
+            <div className="inline-block mb-3 sm:mb-4 px-3 sm:px-4 py-1.5 sm:py-2 bg-[#2d5016]/10 rounded-full border border-[#2d5016]/20">
+              <span className="text-xs sm:text-sm font-semibold text-[#2d5016]">Our Best Sellers</span>
             </div>
-            <h2 className="font-heading text-4xl md:text-5xl font-bold text-[#2d5016] mb-4">
+            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[#2d5016] mb-3 sm:mb-4">
               Featured Products
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
               Handpicked organic products for your health and wellness journey
             </p>
           </div>
@@ -131,13 +131,13 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <div className="text-center mt-16">
+          <div className="text-center mt-10 sm:mt-16">
             <Link
               href="/products"
-              className="inline-flex items-center px-10 py-4 border-2 border-[#2d5016] text-[#2d5016] rounded-xl font-heading font-semibold text-lg hover:bg-[#2d5016] hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="inline-flex items-center px-6 sm:px-10 py-3 sm:py-4 border-2 border-[#2d5016] text-[#2d5016] rounded-xl font-heading font-semibold text-base sm:text-lg hover:bg-[#2d5016] hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 min-h-[48px]"
             >
               View All Products
-              <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="ml-2 w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </Link>

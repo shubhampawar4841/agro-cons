@@ -57,12 +57,12 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center space-x-4">
+          <div className="md:hidden flex items-center space-x-2 sm:space-x-4">
             <AuthButton />
             <CartIcon />
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-700 hover:text-[#2d5016]"
+              className="text-gray-700 hover:text-[#2d5016] p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
               aria-label="Toggle menu"
             >
               <svg

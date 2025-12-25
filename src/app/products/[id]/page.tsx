@@ -133,14 +133,14 @@ export default function ProductDetailPage() {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-4">
-          <Link href="/products" className="text-[#2d5016] hover:underline text-sm">
+          <Link href="/products" className="text-[#2d5016] hover:underline text-sm sm:text-base min-h-[44px] inline-flex items-center">
             ← Back to Products
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 mb-12 sm:mb-16 lg:mb-12">
           {/* Product Image Gallery */}
-          <div className="relative h-64 md:h-96 lg:h-[500px] rounded-lg overflow-hidden bg-gray-100 shadow-lg">
+          <div className="relative h-64 sm:h-80 md:h-96 lg:h-[500px] rounded-lg overflow-hidden bg-gray-100 shadow-lg">
             {(() => {
               // Get images array or fallback to single image_url
               const images = product.images && product.images.length > 0 
@@ -173,18 +173,20 @@ export default function ProductDetailPage() {
 
             {/* Quantity Selector */}
             <div className="flex items-center space-x-4 mb-6">
-              <label className="font-medium text-gray-700">Quantity:</label>
+              <label className="font-medium text-gray-700 text-sm sm:text-base">Quantity:</label>
               <div className="flex items-center border border-gray-300 rounded-lg">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 min-w-[44px] min-h-[44px] flex items-center justify-center text-lg"
+                  aria-label="Decrease quantity"
                 >
                   −
                 </button>
-                <span className="px-6 py-2 font-medium">{quantity}</span>
+                <span className="px-4 sm:px-6 py-2 font-medium min-w-[60px] text-center">{quantity}</span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 min-w-[44px] min-h-[44px] flex items-center justify-center text-lg"
+                  aria-label="Increase quantity"
                 >
                   +
                 </button>
@@ -232,10 +234,10 @@ export default function ProductDetailPage() {
 
         {/* Tabbed Information Section */}
         <div className="border-t border-gray-200 pt-8">
-          <div className="flex flex-wrap gap-2 mb-6 border-b border-gray-200">
+          <div className="flex flex-wrap gap-1 sm:gap-2 mb-6 border-b border-gray-200 overflow-x-auto">
             <button
               onClick={() => setActiveTab('ingredients')}
-              className={`px-6 py-3 font-medium ${
+              className={`px-3 sm:px-6 py-2 sm:py-3 font-medium text-sm sm:text-base whitespace-nowrap ${
                 activeTab === 'ingredients'
                   ? 'text-[#2d5016] border-b-2 border-[#2d5016]'
                   : 'text-gray-600 hover:text-[#2d5016]'
@@ -245,7 +247,7 @@ export default function ProductDetailPage() {
             </button>
             <button
               onClick={() => setActiveTab('benefits')}
-              className={`px-6 py-3 font-medium ${
+              className={`px-3 sm:px-6 py-2 sm:py-3 font-medium text-sm sm:text-base whitespace-nowrap ${
                 activeTab === 'benefits'
                   ? 'text-[#2d5016] border-b-2 border-[#2d5016]'
                   : 'text-gray-600 hover:text-[#2d5016]'
@@ -255,7 +257,7 @@ export default function ProductDetailPage() {
             </button>
             <button
               onClick={() => setActiveTab('usage')}
-              className={`px-6 py-3 font-medium ${
+              className={`px-3 sm:px-6 py-2 sm:py-3 font-medium text-sm sm:text-base whitespace-nowrap ${
                 activeTab === 'usage'
                   ? 'text-[#2d5016] border-b-2 border-[#2d5016]'
                   : 'text-gray-600 hover:text-[#2d5016]'
@@ -265,7 +267,7 @@ export default function ProductDetailPage() {
             </button>
             <button
               onClick={() => setActiveTab('nutrition')}
-              className={`px-6 py-3 font-medium ${
+              className={`px-3 sm:px-6 py-2 sm:py-3 font-medium text-sm sm:text-base whitespace-nowrap ${
                 activeTab === 'nutrition'
                   ? 'text-[#2d5016] border-b-2 border-[#2d5016]'
                   : 'text-gray-600 hover:text-[#2d5016]'
@@ -275,7 +277,7 @@ export default function ProductDetailPage() {
             </button>
             <button
               onClick={() => setActiveTab('disclaimer')}
-              className={`px-6 py-3 font-medium ${
+              className={`px-3 sm:px-6 py-2 sm:py-3 font-medium text-sm sm:text-base whitespace-nowrap ${
                 activeTab === 'disclaimer'
                   ? 'text-[#2d5016] border-b-2 border-[#2d5016]'
                   : 'text-gray-600 hover:text-[#2d5016]'
@@ -409,18 +411,18 @@ export default function ProductDetailPage() {
       </div>
 
       {/* Sticky Buy Now Button for Mobile */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg p-4 z-40">
-        <div className="flex gap-3">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg p-3 sm:p-4 z-40 safe-area-inset-bottom">
+        <div className="flex gap-2 sm:gap-3">
           <button
             onClick={handleAddToCart}
             disabled={isAdding}
-            className="flex-1 px-4 py-3 border-2 border-[#2d5016] text-[#2d5016] rounded-lg font-medium disabled:opacity-50"
+            className="flex-1 px-4 py-3 border-2 border-[#2d5016] text-[#2d5016] rounded-lg font-medium disabled:opacity-50 min-h-[48px] text-sm sm:text-base"
           >
             {isAdding ? 'Adding...' : 'Add to Cart'}
           </button>
           <button
             onClick={handleBuyNow}
-            className="flex-1 px-4 py-3 bg-[#2d5016] text-white rounded-lg font-medium hover:bg-[#1f3509]"
+            className="flex-1 px-4 py-3 bg-[#2d5016] text-white rounded-lg font-medium hover:bg-[#1f3509] min-h-[48px] text-sm sm:text-base"
           >
             Buy Now
           </button>
