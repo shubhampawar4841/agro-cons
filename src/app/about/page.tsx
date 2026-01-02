@@ -12,7 +12,7 @@ export default function AboutPage() {
         
         <div className="prose prose-lg max-w-none">
           <p className="text-gray-700 leading-relaxed mb-6">
-            Welcome to AGRICORNS, your trusted source for organic, lab-tested agro products. 
+            Welcome to AGRICORNS, your trusted source for organic agro products. 
             We are committed to bringing you the finest quality organic products sourced directly 
             from Indian farms.
           </p>
@@ -29,7 +29,7 @@ export default function AboutPage() {
             Quality Assurance
           </h2>
           <p className="text-gray-700 leading-relaxed mb-6">
-            Every product in our collection undergoes rigorous lab testing to ensure purity, 
+            Every product in our collection is carefully selected to ensure purity, 
             quality, and safety. We work directly with certified organic farmers to bring you 
             products that are free from harmful chemicals and pesticides.
           </p>
@@ -39,7 +39,7 @@ export default function AboutPage() {
           </h2>
           <ul className="list-disc list-inside text-gray-700 space-y-2 mb-6">
             <li>100% Organic and Certified Products</li>
-            <li>Lab Tested for Purity and Quality</li>
+            <li>Premium Quality Assurance</li>
             <li>Direct from Indian Farms</li>
             <li>Fast and Reliable Delivery</li>
             <li>Transparent and Trustworthy</li>

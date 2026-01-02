@@ -99,7 +99,7 @@ export default function ProductAIAssistant({ product }: ProductAIAssistantProps)
       {/* Chat Button with slow pulse animation */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-r from-[#2d5016] to-[#4a7c2a] text-white rounded-full shadow-lg hover:shadow-xl flex items-center justify-center"
+        className="fixed bottom-20 right-4 md:bottom-6 md:right-6 z-50 w-14 h-14 bg-gradient-to-r from-[#2d5016] to-[#4a7c2a] text-white rounded-full shadow-lg hover:shadow-xl flex items-center justify-center"
         aria-label="Open AI Assistant"
         initial={{ scale: 0 }}
         animate={{ 
@@ -141,7 +141,7 @@ export default function ProductAIAssistant({ product }: ProductAIAssistantProps)
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-            className="fixed bottom-24 right-6 z-50 w-96 h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col border border-gray-200 overflow-hidden"
+            className="fixed bottom-32 right-4 md:bottom-24 md:right-6 z-50 w-[calc(100vw-2rem)] md:w-96 h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col border border-gray-200 overflow-hidden"
           >
           {/* Header */}
           <div className="bg-gradient-to-r from-[#2d5016] to-[#4a7c2a] text-white p-4 flex items-center justify-between">

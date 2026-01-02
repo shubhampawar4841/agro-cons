@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import TrustBadge from '@/components/TrustBadge';
 import ProductCard from '@/components/ProductCard';
+import GeneralAIAssistant from '@/components/GeneralAIAssistant';
 
 interface Product {
   id: string;
@@ -315,6 +316,9 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* General AI Assistant */}
+      <GeneralAIAssistant />
     </div>
   );
 }

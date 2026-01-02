@@ -27,7 +27,7 @@ export const products: Product[] = [
     weight: '100g',
     image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&h=400&fit=crop',
     rating: 4.5,
-    description: 'Pure organic moringa powder, rich in vitamins and minerals. Lab tested for purity and quality.',
+    description: 'Pure organic moringa powder, rich in vitamins and minerals. Premium quality assurance.',
     ingredients: ['100% Organic Moringa Leaves'],
     healthBenefits: [
       'Rich in Vitamin A, C, and E',
@@ -207,6 +207,9 @@ export const products: Product[] = [
     }
   }
 ];
+
+
+
 
 
 
