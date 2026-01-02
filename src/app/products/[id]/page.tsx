@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import ProductAIAssistant from '@/components/ProductAIAssistant';
-import ImageCarousel from '@/components/ImageCarousel';
+import ProductGallery from '@/components/ProductGallery';
 
 interface Product {
   id: string;
@@ -138,75 +138,116 @@ export default function ProductDetailPage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 mb-12 sm:mb-16 lg:mb-12">
+        <div className="product product--medium product--left product--thumbnail_slider grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 mb-12 sm:mb-16 lg:mb-12">
           {/* Product Image Gallery */}
-          <div className="relative h-64 sm:h-80 md:h-96 lg:h-[500px] rounded-lg overflow-hidden bg-gray-100 shadow-lg">
+          <div className="product__media-wrapper">
             {(() => {
               // Get images array or fallback to single image_url
               const images = product.images && product.images.length > 0 
                 ? product.images 
                 : (product.image_url ? [product.image_url] : []);
               
-              return <ImageCarousel images={images} alt={product.name} className="h-full" showArrowsOnHover={false} />;
+              return <ProductGallery images={images} alt={product.name} />;
             })()}
           </div>
 
           {/* Product Info */}
-          <div>
-            <h1 className="font-heading text-3xl md:text-4xl font-bold text-[#2d5016] mb-2">
-              {product.name}
-            </h1>
-            <p className="text-gray-500 mb-4">{product.weight}</p>
-            
-            <div className="flex items-center space-x-2 mb-4">
-              {renderStars(4.5)}
-              <span className="text-gray-600">(4.5)</span>
-            </div>
+          <div className="product__info-wrapper product__column-sticky">
+            <section className="product__info-container">
+              <div className="product__title mb-4">
+                <h1 className="font-heading text-3xl md:text-4xl font-bold text-[#2d5016] mb-2">
+                  {product.name}
+                </h1>
+                <p className="text-gray-500 text-sm">{product.weight}</p>
+              </div>
+              
+              {/* Rating */}
+              <div className="flex items-center space-x-2 mb-4">
+                {renderStars(4.5)}
+                <span className="text-gray-600 text-sm">(4.5)</span>
+              </div>
 
-            <div className="mb-6">
-              <span className="font-heading font-bold text-4xl text-[#2d5016]">
-                ₹{product.price}
-              </span>
-            </div>
+              {/* Price */}
+              <div id="price" className="mb-6" role="status">
+                <div className="price price--large">
+                  <div className="price__container">
+                    <div className="price__regular">
+                      <span className="visually-hidden">Regular price</span>
+                      <span className="price-item price-item--regular font-heading font-bold text-4xl text-[#2d5016]">
+                        ₹{product.price}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="product__tax caption text-sm text-gray-500 mt-2">
+                  Taxes included. <Link href="/shipping" className="text-[#2d5016] hover:underline">Shipping</Link> calculated at checkout.
+                </div>
+              </div>
 
-            <p className="text-gray-700 mb-6">{product.description || 'Premium quality organic product.'}</p>
+              <div className="product__description mb-6">
+                <p className="text-gray-700 leading-relaxed">{product.description || 'Premium quality organic product.'}</p>
+              </div>
 
             {/* Quantity Selector */}
-            <div className="flex items-center space-x-4 mb-6">
-              <label className="font-medium text-gray-700 text-sm sm:text-base">Quantity:</label>
-              <div className="flex items-center border border-gray-300 rounded-lg">
+            <div className="product-form__quantity mb-6">
+              <label className="quantity__label form__label block font-medium text-gray-700 mb-2 text-sm sm:text-base">
+                Quantity
+              </label>
+              <div className="quantity flex items-center border border-gray-300 rounded-lg w-fit">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 min-w-[44px] min-h-[44px] flex items-center justify-center text-lg"
+                  disabled={quantity <= 1}
+                  className="quantity__button px-4 py-2 text-gray-700 hover:bg-gray-100 min-w-[44px] min-h-[44px] flex items-center justify-center text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   aria-label="Decrease quantity"
                 >
-                  −
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-minus w-4 h-4" viewBox="0 0 10 2">
+                    <path fill="currentColor" fillRule="evenodd" d="M.5 1C.5.7.7.5 1 .5h8a.5.5 0 1 1 0 1H1A.5.5 0 0 1 .5 1" clipRule="evenodd"></path>
+                  </svg>
                 </button>
-                <span className="px-4 sm:px-6 py-2 font-medium min-w-[60px] text-center">{quantity}</span>
+                <input
+                  type="number"
+                  name="quantity"
+                  value={quantity}
+                  min="1"
+                  readOnly
+                  className="quantity__input px-4 sm:px-6 py-2 font-medium min-w-[60px] text-center border-x border-gray-300 focus:outline-none"
+                />
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 min-w-[44px] min-h-[44px] flex items-center justify-center text-lg"
+                  className="quantity__button px-4 py-2 text-gray-700 hover:bg-gray-100 min-w-[44px] min-h-[44px] flex items-center justify-center text-lg transition-colors"
                   aria-label="Increase quantity"
                 >
-                  +
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-plus w-4 h-4" viewBox="0 0 10 10">
+                    <path fill="currentColor" fillRule="evenodd" d="M1 4.51a.5.5 0 0 0 0 1h3.5l.01 3.5a.5.5 0 0 0 1-.01V5.5l3.5-.01a.5.5 0 0 0-.01-1H5.5L5.49.99a.5.5 0 0 0-1 .01v3.5l-3.5.01z" clipRule="evenodd"></path>
+                  </svg>
                 </button>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-6">
-              <button
-                onClick={handleBuyNow}
-                className="flex-1 px-6 py-4 bg-[#2d5016] text-white rounded-lg font-heading font-semibold text-lg hover:bg-[#1f3509] shadow-lg hover:shadow-xl transition-all"
-              >
-                Buy Now
-              </button>
+            <div className="product-form__buttons flex flex-col sm:flex-row gap-4 mb-6">
               <button
                 onClick={handleAddToCart}
                 disabled={isAdding}
-                className="flex-1 px-6 py-4 border-2 border-[#2d5016] text-[#2d5016] rounded-lg font-heading font-semibold text-lg hover:bg-[#2d5016] hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="product-form__submit button button--full-width button--secondary flex-1 px-6 py-4 bg-[#2d5016] text-white rounded-lg font-heading font-semibold text-lg hover:bg-[#1f3509] shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px]"
               >
-                {isAdding ? 'Adding...' : 'Add to Cart'}
+                {isAdding ? (
+                  <span className="flex items-center justify-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Adding...
+                  </span>
+                ) : (
+                  'Add to cart'
+                )}
+              </button>
+              <button
+                onClick={handleBuyNow}
+                className="flex-1 px-6 py-4 border-2 border-[#2d5016] text-[#2d5016] rounded-lg font-heading font-semibold text-lg hover:bg-[#2d5016] hover:text-white transition-all min-h-[48px]"
+              >
+                Buy Now
               </button>
             </div>
 
@@ -217,8 +258,8 @@ export default function ProductDetailPage() {
                 <span className="text-sm font-medium text-gray-700">100% Organic</span>
               </div>
               <div className="flex items-center space-x-2">
-                <span className="text-2xl">🔬</span>
-                <span className="text-sm font-medium text-gray-700">Lab Tested</span>
+                <span className="text-2xl">✨</span>
+                <span className="text-sm font-medium text-gray-700">Premium Quality</span>
               </div>
               <div className="flex items-center space-x-2">
                 <span className="text-2xl">🇮🇳</span>
@@ -229,6 +270,7 @@ export default function ProductDetailPage() {
                 <span className="text-sm font-medium text-gray-700">Fast Delivery</span>
               </div>
             </div>
+            </section>
           </div>
         </div>
 

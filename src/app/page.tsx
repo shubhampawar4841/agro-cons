@@ -67,7 +67,7 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.1 }}
                 className="inline-block mb-4 px-4 py-2 bg-[#2d5016]/10 rounded-full border border-[#2d5016]/20"
               >
-                <span className="text-sm font-semibold text-[#2d5016]">🌱 100% Organic & Lab Tested</span>
+                <span className="text-sm font-semibold text-[#2d5016]">🌱 100% Organic</span>
               </motion.div>
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
@@ -75,7 +75,7 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#2d5016] mb-4 sm:mb-6 leading-tight"
               >
-                Pure, Organic & Lab Tested Agro Products from{' '}
+                Pure, Organic Agro Products from{' '}
                 <span className="text-[#4a7c2a]">AGRICORNS</span>
               </motion.h1>
               <motion.p
@@ -85,7 +85,7 @@ export default function Home() {
                 className="text-base sm:text-lg md:text-xl text-gray-700 mb-6 sm:mb-8 leading-relaxed"
               >
                 Discover premium quality organic products sourced directly from Indian farms. 
-                Every product is lab tested for purity and quality assurance.
+                Every product is carefully selected for purity and quality assurance.
               </motion.p>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -146,9 +146,9 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 md:gap-12">
             {[
               { icon: "🌿", label: "100% Organic" },
-              { icon: "🔬", label: "Lab Tested" },
               { icon: "🇮🇳", label: "Made in India" },
-              { icon: "🚚", label: "Fast Delivery" }
+              { icon: "🚚", label: "Fast Delivery" },
+              { icon: "✨", label: "Premium Quality" }
             ].map((badge, index) => (
               <motion.div
                 key={index}
@@ -248,7 +248,7 @@ export default function Home() {
                 <h3 className="font-heading font-bold text-2xl">AGRICORNS</h3>
               </div>
               <p className="text-gray-300 mb-6 max-w-md leading-relaxed">
-                Your trusted source for organic, lab-tested agro products. 
+                Your trusted source for organic agro products. 
                 We bring you the finest quality products directly from Indian farms.
               </p>
               <div className="flex space-x-4">
@@ -290,15 +290,19 @@ export default function Home() {
               <h4 className="font-heading font-semibold text-lg mb-6">Contact Us</h4>
               <ul className="space-y-3 text-gray-300">
                 <li className="flex items-start">
-                  <span className="mr-3">📧</span>
-                  <a href="mailto:support@agricorns.com" className="hover:text-white transition-colors">
-                    support@agricorns.com
-                  </a>
+                  <span className="mr-3">📍</span>
+                  <div>
+                    <p className="font-medium text-white mb-1">Agricorns Food's</p>
+                    <p className="text-sm leading-relaxed">
+                      Plot no A-25, Jakekur MIDC, Omerga,<br />
+                      Dist-Dharashiv, Maharashtra 413606
+                    </p>
+                  </div>
                 </li>
-                <li className="flex items-start">
-                  <span className="mr-3">📞</span>
-                  <a href="tel:+911800XXX" className="hover:text-white transition-colors">
-                    +91 1800-XXX-XXXX
+                <li className="flex items-start mt-4">
+                  <span className="mr-3">📧</span>
+                  <a href="mailto:info@agricorns.in" className="hover:text-white transition-colors">
+                    info@agricorns.in
                   </a>
                 </li>
               </ul>

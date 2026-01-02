@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import LoaderWrapper from "@/components/LoaderWrapper";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -17,8 +18,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "AGRICORNS - Organic & Lab Tested Agro Products",
-  description: "Shop pure, organic, and lab-tested agro products including moringa powder, seeds, and grains. Made in India with fast delivery.",
+  title: "AGRICORNS - Organic Agro Products",
+  description: "Shop pure, organic agro products including moringa powder, seeds, and grains. Made in India with fast delivery.",
 };
 
 export default function RootLayout({
@@ -33,6 +34,7 @@ export default function RootLayout({
       >
         <LoaderWrapper />
         {children}
+        <WhatsAppButton />
       </body>
     </html>
   );
