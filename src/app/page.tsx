@@ -90,8 +90,8 @@ export default function Home() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="py-12 sm:py-16 bg-white border-y border-gray-100"
-      >
+        className="pt-2 pb-4 sm:py-16 bg-white border-y border-gray-100"
+        >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 md:gap-12">
             {[
@@ -120,7 +120,7 @@ export default function Home() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="py-12 sm:py-20 bg-gradient-to-b from-gray-50 to-white"
+        className="py-2 sm:py-20 bg-gradient-to-b from-gray-50 to-white"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
