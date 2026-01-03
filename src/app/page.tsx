@@ -73,16 +73,10 @@ export default function Home() {
 
       {/* Banner Slideshow - Full Width */}
 {/* Banner Slideshow - Full Width */}
-<section className="relative w-full overflow-hidden -mt-[64px] sm:mt-0">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.7 }}
-          className="w-full"
-        >
-          <BannerSlideshow images={bannerImages} autoPlayInterval={5000} />
-        </motion.div>
-      </section>
+<section className="relative w-full overflow-hidden pt-[px] sm:pt-0">
+  <BannerSlideshow images={bannerImages} autoPlayInterval={5000} />
+</section>
+
 
       {/* Trust Icons Section with scroll animation */}
       <motion.section

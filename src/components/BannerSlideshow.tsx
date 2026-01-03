@@ -86,7 +86,7 @@ export default function BannerSlideshow({
               alt={`Banner ${currentIndex + 1}`}
               fill
               priority={currentIndex === 0}
-              className="object-cover md:object-cover"
+    className="object-contain"
               sizes="100vw"
               quality={90}
             />
