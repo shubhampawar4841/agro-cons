@@ -702,6 +702,29 @@ input[type="button"]:active {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Swipe-friendly slideshow container */
+section[class*="min-h-"] {
+  touch-action: pan-y pinch-zoom;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent text selection during swipe */
+section[class*="min-h-"] * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection in content areas */
+section[class*="min-h-"] a,
+section[class*="min-h-"] button {
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
+}
+
 /* Smooth scrolling for mobile */
 @media (max-width: 768px) {
   html {

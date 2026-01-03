@@ -11,6 +11,8 @@ interface ProductGalleryProps {
 export default function ProductGallery({ images, alt }: ProductGalleryProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [imageError, setImageError] = useState<boolean[]>(new Array(images.length).fill(false));
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
 
   if (!images || images.length === 0) {
     return (
@@ -40,20 +42,55 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
     });
   };
 
+  // Swipe handlers for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const minSwipeDistance = 50;
+
+    if (distance > minSwipeDistance) {
+      // Swiped left - go to next
+      handleNext();
+    }
+    if (distance < -minSwipeDistance) {
+      // Swiped right - go to previous
+      handlePrev();
+    }
+    
+    // Reset
+    setTouchStart(0);
+    setTouchEnd(0);
+  };
+
   return (
     <div className="product-gallery">
       {/* Main Image Slider */}
       <div className="relative mb-4">
-        <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-gray-100">
+        <div 
+          className="relative aspect-square w-full overflow-hidden rounded-lg bg-gray-100 touch-manipulation"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           {!imageError[currentIndex] && images[currentIndex] ? (
             <Image
               src={images[currentIndex]}
               alt={`${alt} - Image ${currentIndex + 1}`}
               fill
-              className="object-cover"
+              className="object-cover select-none"
               priority={currentIndex === 0}
               onError={() => handleImageError(currentIndex)}
               unoptimized={images[currentIndex].includes('supabase.co')}
+              draggable={false}
             />
           ) : (
             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -61,13 +98,13 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
             </div>
           )}
 
-          {/* Navigation Buttons - Only show if more than 1 image */}
+          {/* Navigation Buttons - Hidden on Mobile, Visible on Desktop */}
           {images.length > 1 && (
             <>
               <button
                 onClick={handlePrev}
                 disabled={images.length === 1}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all z-10 disabled:opacity-50 disabled:cursor-not-allowed items-center justify-center"
                 aria-label="Previous image"
               >
                 <svg className="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -77,7 +114,7 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
               <button
                 onClick={handleNext}
                 disabled={images.length === 1}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all z-10 disabled:opacity-50 disabled:cursor-not-allowed items-center justify-center"
                 aria-label="Next image"
               >
                 <svg className="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,6 +169,7 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
     </div>
   );
 }
+
 
 
 

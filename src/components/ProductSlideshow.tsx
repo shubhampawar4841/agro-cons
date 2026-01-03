@@ -110,7 +110,9 @@ export default function ProductSlideshow({
   const copy = marketingCopy[product.slug];
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    setPaused(true); // Pause auto-play when user starts swiping
     setTouchStart(e.targetTouches[0].clientX);
+    setTouchEnd(0); // Reset touch end
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -118,16 +120,32 @@ export default function ProductSlideshow({
   };
 
   const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
+    if (!touchStart || !touchEnd) {
+      setPaused(false); // Resume auto-play if no swipe detected
+      return;
+    }
+    
     const distance = touchStart - touchEnd;
-    const minSwipeDistance = 50;
+    const minSwipeDistance = 50; // Minimum swipe distance in pixels
 
-    if (distance > minSwipeDistance) {
-      next();
+    if (Math.abs(distance) > minSwipeDistance) {
+      if (distance > 0) {
+        // Swiped left - go to next
+        next();
+      } else {
+        // Swiped right - go to previous
+        prev();
+      }
     }
-    if (distance < -minSwipeDistance) {
-      prev();
-    }
+    
+    // Reset touch values
+    setTouchStart(0);
+    setTouchEnd(0);
+    
+    // Resume auto-play after a short delay
+    setTimeout(() => {
+      setPaused(false);
+    }, 1000);
   };
 
   return (
@@ -212,41 +230,37 @@ export default function ProductSlideshow({
         </div>
       </div>
 
-      {/* NAV BUTTONS - Mobile Optimized */}
+      {/* NAV BUTTONS - Hidden on Mobile, Visible on Desktop */}
       <button 
         onClick={prev} 
-        className="absolute left-2 sm:left-4 md:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-white/80 backdrop-blur-sm hover:bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 text-2xl sm:text-3xl text-gray-700 hover:text-green-700 touch-manipulation"
+        className="hidden md:flex absolute left-4 lg:left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 lg:w-14 lg:h-14 bg-white/80 backdrop-blur-sm hover:bg-white rounded-full items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 text-3xl text-gray-700 hover:text-green-700"
         aria-label="Previous product"
       >
         ‹
       </button>
       <button 
         onClick={next} 
-        className="absolute right-2 sm:right-4 md:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-white/80 backdrop-blur-sm hover:bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 text-2xl sm:text-3xl text-gray-700 hover:text-green-700 touch-manipulation"
+        className="hidden md:flex absolute right-4 lg:right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 lg:w-14 lg:h-14 bg-white/80 backdrop-blur-sm hover:bg-white rounded-full items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 text-3xl text-gray-700 hover:text-green-700"
         aria-label="Next product"
       >
         ›
       </button>
 
-      {/* INDICATOR DOTS - Mobile Optimized (FIXED) */}
-{/* INDICATOR DOTS – DESKTOP ONLY */}
-<div className="hidden md:flex absolute bottom-6 left-1/2 -translate-x-1/2 z-20 items-center gap-2">
-  {products.map((_, i) => (
-    <button
-      key={i}
-      onClick={() => setIndex(i)}
-      aria-label={`Go to slide ${i + 1}`}
-      className={`
-        transition-all duration-300 rounded-full
-        ${
-          i === index
-            ? 'w-10 h-3 bg-green-700 shadow-md'
-            : 'w-3 h-3 bg-gray-400 hover:bg-gray-500'
-        }
-      `}
-    />
-  ))}
-</div>
+      {/* INDICATOR DOTS - Visible on Mobile & Desktop */}
+      <div className="flex absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 items-center gap-2">
+        {products.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setIndex(i)}
+            aria-label={`Go to slide ${i + 1}`}
+            className={`transition-all duration-300 rounded-full touch-manipulation ${
+              i === index
+                ? 'w-8 h-2 sm:w-10 sm:h-3 bg-green-700 shadow-md'
+                : 'w-2 h-2 sm:w-3 sm:h-3 bg-gray-400 hover:bg-gray-500'
+            }`}
+          />
+        ))}
+      </div>
 
 
 
