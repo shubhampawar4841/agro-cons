@@ -70,45 +70,56 @@ export default function GeneralAIAssistant() {
 
   return (
     <>
-      {/* Chat Button - Top Right with AI Assistant Logo */}
-      <motion.button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-20 right-4 md:top-24 md:right-6 z-50 w-12 h-12 md:w-14 md:h-14 bg-gradient-to-r from-[#2d5016] to-[#4a7c2a] text-white rounded-full shadow-lg hover:shadow-xl flex items-center justify-center group"
-        aria-label="Open AI Assistant"
-        initial={{ scale: 0, y: -20 }}
-        animate={{ 
-          scale: 1,
-          y: 0,
-          boxShadow: isOpen ? "0 10px 25px rgba(45, 80, 22, 0.3)" : [
-            "0 10px 25px rgba(45, 80, 22, 0.2)",
-            "0 15px 35px rgba(45, 80, 22, 0.3)",
-            "0 10px 25px rgba(45, 80, 22, 0.2)"
-          ]
-        }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ 
-          boxShadow: { duration: 3, repeat: isOpen ? 0 : Infinity, ease: "easeInOut" },
-          scale: { duration: 0.2 },
-          y: { duration: 0.3 }
-        }}
-      >
-        <motion.div
-          animate={{ rotate: isOpen ? 90 : 0 }}
-          transition={{ duration: 0.3 }}
+      {/* Chat Button - Top Right with AI Assistant Logo and Text */}
+      <div className="fixed top-20 right-4 md:top-24 md:right-6 z-50 flex flex-col items-center gap-2">
+        <motion.button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-r from-[#2d5016] to-[#4a7c2a] text-white rounded-full shadow-lg hover:shadow-xl flex items-center justify-center group"
+          aria-label="Open AI Assistant"
+          initial={{ scale: 0, y: -20 }}
+          animate={{ 
+            scale: 1,
+            y: 0,
+            boxShadow: isOpen ? "0 10px 25px rgba(45, 80, 22, 0.3)" : [
+              "0 10px 25px rgba(45, 80, 22, 0.2)",
+              "0 15px 35px rgba(45, 80, 22, 0.3)",
+              "0 10px 25px rgba(45, 80, 22, 0.2)"
+            ]
+          }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ 
+            boxShadow: { duration: 3, repeat: isOpen ? 0 : Infinity, ease: "easeInOut" },
+            scale: { duration: 0.2 },
+            y: { duration: 0.3 }
+          }}
         >
-          {isOpen ? (
-            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg className="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
-              {/* Chatbot Icon from Flaticon */}
-              <path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 2.98.97 4.29L1 23l6.71-1.97C9.02 21.64 10.46 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6zm4 0h-2V7h2v6z"/>
-            </svg>
-          )}
-        </motion.div>
-      </motion.button>
+          <motion.div
+            animate={{ rotate: isOpen ? 90 : 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {isOpen ? (
+              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
+                {/* Chatbot Icon from Flaticon */}
+                <path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 2.98.97 4.29L1 23l6.71-1.97C9.02 21.64 10.46 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6zm4 0h-2V7h2v6z"/>
+              </svg>
+            )}
+          </motion.div>
+        </motion.button>
+        {!isOpen && (
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-xs font-semibold text-[#2d5016] bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full shadow-sm whitespace-nowrap"
+          >
+            Ask AI Assistant
+          </motion.span>
+        )}
+      </div>
 
       {/* Chat Window - Slides down from top right */}
       <AnimatePresence>

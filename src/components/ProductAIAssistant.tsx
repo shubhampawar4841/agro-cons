@@ -96,75 +96,94 @@ export default function ProductAIAssistant({ product }: ProductAIAssistantProps)
 
   return (
     <>
-      {/* Chat Button with slow pulse animation */}
-      <motion.button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-20 right-4 md:bottom-6 md:right-6 z-50 w-14 h-14 bg-gradient-to-r from-[#2d5016] to-[#4a7c2a] text-white rounded-full shadow-lg hover:shadow-xl flex items-center justify-center"
-        aria-label="Open AI Assistant"
-        initial={{ scale: 0 }}
-        animate={{ 
-          scale: 1,
-          boxShadow: isOpen ? "0 10px 25px rgba(45, 80, 22, 0.3)" : [
-            "0 10px 25px rgba(45, 80, 22, 0.2)",
-            "0 15px 35px rgba(45, 80, 22, 0.3)",
-            "0 10px 25px rgba(45, 80, 22, 0.2)"
-          ]
-        }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ 
-          boxShadow: { duration: 3, repeat: isOpen ? 0 : Infinity, ease: "easeInOut" },
-          scale: { duration: 0.2 }
-        }}
-      >
-        <motion.div
-          animate={{ rotate: isOpen ? 90 : 0 }}
-          transition={{ duration: 0.3 }}
+      {/* Chat Button - Top Right with AI Assistant Logo and Text */}
+      <div className="fixed top-20 right-4 md:top-24 md:right-6 z-50 flex flex-col items-center gap-2">
+        <motion.button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-r from-[#2d5016] to-[#4a7c2a] text-white rounded-full shadow-lg hover:shadow-xl flex items-center justify-center group"
+          aria-label="Open AI Assistant"
+          initial={{ scale: 0, y: -20 }}
+          animate={{ 
+            scale: 1,
+            y: 0,
+            boxShadow: isOpen ? "0 10px 25px rgba(45, 80, 22, 0.3)" : [
+              "0 10px 25px rgba(45, 80, 22, 0.2)",
+              "0 15px 35px rgba(45, 80, 22, 0.3)",
+              "0 10px 25px rgba(45, 80, 22, 0.2)"
+            ]
+          }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ 
+            boxShadow: { duration: 3, repeat: isOpen ? 0 : Infinity, ease: "easeInOut" },
+            scale: { duration: 0.2 },
+            y: { duration: 0.3 }
+          }}
         >
-          {isOpen ? (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-            </svg>
-          )}
-        </motion.div>
-      </motion.button>
+          <motion.div
+            animate={{ rotate: isOpen ? 90 : 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {isOpen ? (
+              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
+                {/* Chatbot Icon from Flaticon */}
+                <path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 2.98.97 4.29L1 23l6.71-1.97C9.02 21.64 10.46 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6zm4 0h-2V7h2v6z"/>
+              </svg>
+            )}
+          </motion.div>
+        </motion.button>
+        {!isOpen && (
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-xs font-semibold text-[#2d5016] bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full shadow-sm whitespace-nowrap"
+          >
+            Ask AI Assistant
+          </motion.span>
+        )}
+      </div>
 
-      {/* Chat Window with scale-in animation */}
+      {/* Chat Window - Slides down from top right */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-            className="fixed bottom-32 right-4 md:bottom-24 md:right-6 z-50 w-[calc(100vw-2rem)] md:w-96 h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col border border-gray-200 overflow-hidden"
+            initial={{ opacity: 0, y: -100, x: 0 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            exit={{ opacity: 0, y: -100, x: 0 }}
+            transition={{ duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
+            className="fixed top-28 right-4 md:top-32 md:right-6 z-50 w-[calc(100vw-2rem)] md:w-96 h-[calc(100vh-8rem)] md:h-[600px] max-h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col border border-gray-200 overflow-hidden"
           >
-          {/* Header */}
-          <div className="bg-gradient-to-r from-[#2d5016] to-[#4a7c2a] text-white p-4 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            {/* Header with AI Assistant Logo */}
+            <div className="bg-gradient-to-r from-[#2d5016] to-[#4a7c2a] text-white p-4 flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center ring-2 ring-white/30">
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    {/* Chatbot Icon from Flaticon */}
+                    <path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 2.98.97 4.29L1 23l6.71-1.97C9.02 21.64 10.46 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6zm4 0h-2V7h2v6z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-heading font-semibold text-base md:text-lg flex items-center gap-2">
+                    <span>🤖</span>
+                    <span>AI Assistant</span>
+                  </h3>
+                  <p className="text-xs text-white/80">{product.name}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-white/80 hover:text-white transition-colors p-1 hover:bg-white/10 rounded-full"
+                aria-label="Close chat"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
-              </div>
-              <div>
-                <h3 className="font-heading font-semibold text-lg">AI Assistant</h3>
-                <p className="text-xs text-white/80">{product.name}</p>
-              </div>
+              </button>
             </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-white/80 hover:text-white transition-colors"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
 
           {/* Messages with scale-in animation */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
@@ -225,7 +244,7 @@ export default function ProductAIAssistant({ product }: ProductAIAssistantProps)
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask about this product..."
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d5016] focus:border-transparent outline-none"
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d5016] focus:border-transparent outline-none text-sm"
                 disabled={isLoading}
               />
               <button

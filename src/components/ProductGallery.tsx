@@ -76,7 +76,8 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
       {/* Main Image Slider */}
       <div className="relative mb-4">
         <div 
-          className="relative aspect-square w-full overflow-hidden rounded-lg bg-gray-100 touch-manipulation"
+          className="relative w-full overflow-hidden rounded-lg bg-gray-100 touch-manipulation flex items-center justify-center"
+          style={{ aspectRatio: '832 / 1248', minHeight: '400px' }}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
@@ -86,7 +87,7 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
               src={images[currentIndex]}
               alt={`${alt} - Image ${currentIndex + 1}`}
               fill
-              className="object-cover select-none"
+              className="object-contain select-none"
               priority={currentIndex === 0}
               onError={() => handleImageError(currentIndex)}
               unoptimized={images[currentIndex].includes('supabase.co')}
