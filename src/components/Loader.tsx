@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Logo from './Logo';
 
 export default function Loader() {
   const [showLoader, setShowLoader] = useState(true);
@@ -148,8 +149,9 @@ export default function Loader() {
         </div>
 
         {/* Loading Text */}
-        <div className="mt-8 text-center">
-          <p className="text-white/60 text-sm animate-pulse">Loading AGRICORNS...</p>
+        <div className="mt-8 text-center flex flex-col items-center gap-3">
+          <Logo width={100} height={50} className="brightness-0 invert opacity-70" />
+          <p className="text-white/60 text-sm animate-pulse">Loading...</p>
         </div>
       </div>
     </div>

@@ -97,7 +97,7 @@ export default function Home() {
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                   <Link
                     href="/products"
-                    className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#2d5016] to-[#4a7c2a] text-white rounded-xl font-heading font-semibold text-base sm:text-lg hover:from-[#1f3509] hover:to-[#2d5016] shadow-xl hover:shadow-2xl transition-all duration-200 min-h-[48px]"
+                    className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#2d5016] to-[#4a7c2a] text-white rounded-xl font-heading font-semibold text-base sm:text-lg hover:from-[#1f3509] hover:to-[#2d5016] shadow-xl hover:shadow-2xl transition-all duration-200 min-h-[48px] w-full sm:w-auto touch-manipulation"
                   >
                     Shop Now
                     <svg className="ml-2 w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -237,16 +237,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
             <div className="md:col-span-2">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="relative w-12 h-12">
-                  <Image
-                    src="/WhatsApp Image 2025-12-24 at 10.57.56 PM.jpeg"
-                    alt="AGRICORNS Logo"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-                <h3 className="font-heading font-bold text-2xl">AGRICORNS</h3>
+              <div className="mb-4">
+                {/* <Logo width={140} height={70} className="brightness-0 invert" /> */}
               </div>
               <p className="text-gray-300 mb-6 max-w-md leading-relaxed">
                 Your trusted source for organic agro products. 

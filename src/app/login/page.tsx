@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import Navbar from '@/components/Navbar';
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -64,9 +65,12 @@ export default function LoginPage() {
             <h1 className="text-3xl font-bold text-[#2d5016] mb-2 text-center">
               Sign In
             </h1>
-            <p className="text-gray-600 text-center mb-8">
-              Welcome back to AGRICORNS
-            </p>
+            <div className="flex flex-col items-center justify-center gap-4 mb-8">
+              <p className="text-gray-600 text-center text-lg">
+                Welcome back to
+              </p>
+              <Logo width={120} height={60} />
+            </div>
 
             {error && (
               <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">

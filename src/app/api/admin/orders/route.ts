@@ -9,6 +9,7 @@ export async function GET(req: Request) {
     // Get access token from Authorization header
     const authHeader = req.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.error('Admin orders API: No authorization header');
       return NextResponse.json(
         { error: 'Unauthorized', details: 'No access token provided' },
         { status: 401 }
@@ -16,6 +17,14 @@ export async function GET(req: Request) {
     }
 
     const accessToken = authHeader.replace('Bearer ', '');
+    
+    if (!accessToken || accessToken.length < 10) {
+      console.error('Admin orders API: Invalid access token format');
+      return NextResponse.json(
+        { error: 'Unauthorized', details: 'Invalid access token format' },
+        { status: 401 }
+      );
+    }
 
     // Create authenticated Supabase client
     const supabase = createClient(supabaseUrl, supabaseAnonKey, {
@@ -29,7 +38,16 @@ export async function GET(req: Request) {
     // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     
-    if (authError || !user) {
+    if (authError) {
+      console.error('Admin orders API: Auth error:', authError.message);
+      return NextResponse.json(
+        { error: 'Unauthorized', details: `Invalid user session: ${authError.message}` },
+        { status: 401 }
+      );
+    }
+    
+    if (!user) {
+      console.error('Admin orders API: No user found');
       return NextResponse.json(
         { error: 'Unauthorized', details: 'Invalid user session' },
         { status: 401 }
@@ -79,6 +97,7 @@ export async function GET(req: Request) {
     );
   }
 }
+
 
 
 

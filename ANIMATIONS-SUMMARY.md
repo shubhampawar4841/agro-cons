@@ -100,3 +100,8 @@
 - Smooth 60fps animations using GPU acceleration
 
 
+
+
+
+
+

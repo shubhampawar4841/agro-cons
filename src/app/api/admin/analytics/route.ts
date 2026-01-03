@@ -114,9 +114,71 @@ export async function GET(req: Request) {
         revenue: Math.round(product.revenue),
       }));
 
+    // Fetch refunds from last 6 months (if refunds table exists)
+    let refunds: any[] = [];
+    try {
+      const { data: refundsData, error: refundsError } = await supabase
+        .from('refunds')
+        .select('*, orders(amount)')
+        .gte('created_at', sixMonthsAgo.toISOString())
+        .order('created_at', { ascending: true });
+
+      if (refundsError) {
+        // Refunds table might not exist yet - use empty array
+        console.log('Refunds table not available:', refundsError.message);
+        refunds = [];
+      } else {
+        refunds = refundsData || [];
+      }
+    } catch (error) {
+      // Refunds table doesn't exist - use empty array
+      console.log('Refunds table not available');
+      refunds = [];
+    }
+
+    // Calculate refund statistics
+    const monthlyRefunds: { [key: string]: number } = {};
+    const refundStatusCount: { [key: string]: number } = {
+      initiated: 0,
+      processed: 0,
+      failed: 0,
+    };
+
+    let totalRefundAmount = 0;
+    let totalRefunds = 0;
+
+    refunds.forEach((refund) => {
+      const month = new Date(refund.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      monthlyRefunds[month] = (monthlyRefunds[month] || 0) + Number(refund.amount);
+      
+      refundStatusCount[refund.status] = (refundStatusCount[refund.status] || 0) + 1;
+      
+      if (refund.status === 'processed') {
+        totalRefundAmount += Number(refund.amount);
+      }
+      totalRefunds += 1;
+    });
+
+    // Format monthly refunds for chart
+    const refundsChartData = Object.entries(monthlyRefunds)
+      .map(([month, amount]) => ({
+        month: month.split(' ')[0], // Just month name
+        refunds: Math.round(amount),
+      }))
+      .sort((a, b) => {
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        return months.indexOf(a.month) - months.indexOf(b.month);
+      });
+
+    // Format refund status for chart
+    const refundStatusData = Object.entries(refundStatusCount).map(([status, count]) => ({
+      status: status.charAt(0).toUpperCase() + status.slice(1),
+      count,
+    }));
+
     // Calculate total stats
     const totalRevenue = orders
-      ?.filter((o) => o.payment_status === 'paid' || o.status === 'delivered')
+      ?.filter((o) => o.payment_status === 'paid' || o.status === 'delivered' || o.payment_status === 'captured')
       .reduce((sum, o) => sum + Number(o.amount), 0) || 0;
 
     const totalOrders = orders?.length || 0;
@@ -127,10 +189,15 @@ export async function GET(req: Request) {
       analytics: {
         salesChart: salesChartData,
         topProducts,
+        refundsChart: refundsChartData,
+        refundStatusChart: refundStatusData,
         stats: {
           totalRevenue: Math.round(totalRevenue),
           totalOrders,
           pendingOrders,
+          totalRefunds,
+          totalRefundAmount: Math.round(totalRefundAmount),
+          refundRate: totalOrders > 0 ? ((totalRefunds / totalOrders) * 100).toFixed(2) : '0.00',
         },
       },
     });
@@ -141,6 +208,7 @@ export async function GET(req: Request) {
     );
   }
 }
+
 
 
 

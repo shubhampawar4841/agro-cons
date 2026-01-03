@@ -5,17 +5,28 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import { supabase } from '@/lib/supabase';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 
 interface AnalyticsData {
   salesChart: { month: string; sales: number }[];
   topProducts: { name: string; quantity: number; revenue: number }[];
+  refundsChart: { month: string; refunds: number }[];
+  refundStatusChart: { status: string; count: number }[];
   stats: {
     totalRevenue: number;
     totalOrders: number;
     pendingOrders: number;
+    totalRefunds: number;
+    totalRefundAmount: number;
+    refundRate: string;
   };
 }
+
+const REFUND_STATUS_COLORS = {
+  'Initiated': '#fbbf24', // Yellow
+  'Processed': '#ef4444', // Red
+  'Failed': '#6b7280',   // Gray
+};
 
 export default function AdminAnalyticsPage() {
   const router = useRouter();
@@ -126,12 +137,12 @@ export default function AdminAnalyticsPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Total Revenue</p>
-                <p className="font-heading font-bold text-3xl text-[#2d5016]">
+                <p className="font-heading font-bold text-2xl sm:text-3xl text-[#2d5016]">
                   ₹{analytics.stats.totalRevenue.toLocaleString()}
                 </p>
               </div>
@@ -145,7 +156,7 @@ export default function AdminAnalyticsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Total Orders</p>
-                <p className="font-heading font-bold text-3xl text-[#2d5016]">
+                <p className="font-heading font-bold text-2xl sm:text-3xl text-[#2d5016]">
                   {analytics.stats.totalOrders}
                 </p>
               </div>
@@ -159,12 +170,54 @@ export default function AdminAnalyticsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Pending Orders</p>
-                <p className="font-heading font-bold text-3xl text-[#2d5016]">
+                <p className="font-heading font-bold text-2xl sm:text-3xl text-[#2d5016]">
                   {analytics.stats.pendingOrders}
                 </p>
               </div>
               <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
                 <span className="text-2xl">⏳</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Total Refunds</p>
+                <p className="font-heading font-bold text-2xl sm:text-3xl text-[#2d5016]">
+                  {analytics.stats.totalRefunds}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                <span className="text-2xl">↩️</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Refund Amount</p>
+                <p className="font-heading font-bold text-2xl sm:text-3xl text-red-600">
+                  ₹{analytics.stats.totalRefundAmount.toLocaleString()}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                <span className="text-2xl">💸</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Refund Rate</p>
+                <p className="font-heading font-bold text-2xl sm:text-3xl text-[#2d5016]">
+                  {analytics.stats.refundRate}%
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                <span className="text-2xl">📊</span>
               </div>
             </div>
           </div>
@@ -210,6 +263,44 @@ export default function AdminAnalyticsPage() {
             </ResponsiveContainer>
           </div>
 
+          {/* Refunds Chart */}
+          <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+            <h2 className="font-heading font-bold text-xl text-gray-900 mb-4">
+              Refunds Trend (Last 6 Months)
+            </h2>
+            <ResponsiveContainer width="100%" height={250} className="sm:h-[300px]">
+              <LineChart data={analytics.refundsChart}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis 
+                  dataKey="month" 
+                  stroke="#6b7280"
+                  style={{ fontSize: '12px' }}
+                />
+                <YAxis 
+                  stroke="#6b7280"
+                  style={{ fontSize: '12px' }}
+                  tickFormatter={(value) => `₹${value}`}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#fff', 
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '8px'
+                  }}
+                  formatter={(value: any) => [`₹${value.toLocaleString()}`, 'Refunds']}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="refunds" 
+                  stroke="#ef4444" 
+                  strokeWidth={3}
+                  dot={{ fill: '#ef4444', r: 4 }}
+                  activeDot={{ r: 6 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
           {/* Top Products Chart */}
           <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
             <h2 className="font-heading font-bold text-xl text-gray-900 mb-4">
@@ -249,6 +340,44 @@ export default function AdminAnalyticsPage() {
                   radius={[0, 4, 4, 0]}
                 />
               </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Refund Status Chart */}
+          <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+            <h2 className="font-heading font-bold text-xl text-gray-900 mb-4">
+              Refund Status Breakdown
+            </h2>
+            <ResponsiveContainer width="100%" height={250} className="sm:h-[300px]">
+            <PieChart>
+  <Pie
+    data={analytics.refundStatusChart}
+    cx="50%"
+    cy="50%"
+    labelLine={false}
+    label={({ payload, percent }) => {
+      const safePercent = percent ?? 0;
+      return `${payload.status}: ${payload.count} (${(safePercent * 100).toFixed(0)}%)`;
+    }}
+    outerRadius={80}
+    dataKey="count"
+  >
+    {analytics.refundStatusChart.map((entry, index) => (
+      <Cell
+        key={`cell-${index}`}
+        fill={
+          REFUND_STATUS_COLORS[
+            entry.status as keyof typeof REFUND_STATUS_COLORS
+          ] || '#8884d8'
+        }
+      />
+    ))}
+  </Pie>
+  <Tooltip />
+  <Legend />
+</PieChart>
+
+
             </ResponsiveContainer>
           </div>
         </div>

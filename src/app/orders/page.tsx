@@ -19,7 +19,7 @@ interface Order {
   status: 'created' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
   amount: number;
   payment_method: 'upi' | 'card' | 'cod' | null;
-  payment_status: 'pending' | 'paid' | 'failed';
+  payment_status: 'created' | 'authorized' | 'captured' | 'failed' | 'refunded' | 'partially_refunded';
   shipping_address: any;
   created_at: string;
   items?: OrderItem[];
@@ -30,6 +30,7 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const [cancellingOrder, setCancellingOrder] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -89,14 +90,122 @@ export default function OrdersPage() {
 
   const getPaymentStatusColor = (status: string) => {
     switch (status) {
-      case 'paid':
+      case 'captured':
+      case 'authorized':
         return 'text-green-600';
-      case 'pending':
+      case 'created':
         return 'text-yellow-600';
       case 'failed':
         return 'text-red-600';
+      case 'refunded':
+      case 'partially_refunded':
+        return 'text-orange-600';
       default:
         return 'text-gray-600';
+    }
+  };
+
+  const canCancelOrder = (order: Order) => {
+    // Can cancel if order is not already cancelled, not delivered, and not shipped
+    if (order.status === 'cancelled' || 
+        order.status === 'delivered' || 
+        order.status === 'shipped') {
+      return false;
+    }
+
+    // Check if order was placed within last 6 hours (cancellation window)
+    const orderCreatedAt = new Date(order.created_at);
+    const now = new Date();
+    const hoursSinceOrder = (now.getTime() - orderCreatedAt.getTime()) / (1000 * 60 * 60);
+    
+    return hoursSinceOrder <= 6;
+  };
+
+  const getCancellationMessage = (order: Order) => {
+    if (order.status === 'cancelled') {
+      return 'Order already cancelled';
+    }
+    if (order.status === 'delivered') {
+      return 'Cannot cancel delivered order';
+    }
+    if (order.status === 'shipped') {
+      return 'Cannot cancel shipped order';
+    }
+    
+    // Check cancellation window
+    const orderCreatedAt = new Date(order.created_at);
+    const now = new Date();
+    const hoursSinceOrder = (now.getTime() - orderCreatedAt.getTime()) / (1000 * 60 * 60);
+    
+    if (hoursSinceOrder > 6) {
+      const hoursRemaining = Math.round((hoursSinceOrder - 6) * 10) / 10;
+      return `Cancellation window expired (${hoursRemaining}h ago). Contact support.`;
+    }
+    
+    const hoursRemaining = Math.round((6 - hoursSinceOrder) * 10) / 10;
+    return `Cancel within ${hoursRemaining}h`;
+  };
+
+  const handleCancelOrder = async (orderId: string) => {
+    if (!confirm('Are you sure you want to cancel this order? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      setCancellingOrder(orderId);
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        alert('Please sign in to cancel order');
+        return;
+      }
+
+      const response = await fetch('/api/orders/cancel', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          orderId,
+          reason: 'Customer requested cancellation',
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        // Show detailed error message if available
+        const errorMessage = error.details || error.error || 'Failed to cancel order';
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+      
+      // Refresh orders
+      const ordersResponse = await fetch('/api/get-orders', {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (ordersResponse.ok) {
+        const ordersData = await ordersResponse.json();
+        setOrders(ordersData.orders || []);
+      }
+
+      // Show user-friendly message
+      const message = data.message || 'Order cancelled successfully';
+      alert(message);
+      
+      // If test mode and refund wasn't processed, show additional info
+      if (data.isTestMode) {
+        console.log('Note: In test mode, refunds may be processed asynchronously via webhook.');
+      }
+    } catch (error: any) {
+      console.error('Error cancelling order:', error);
+      alert(error.message || 'Failed to cancel order. Please try again.');
+    } finally {
+      setCancellingOrder(null);
     }
   };
 
@@ -176,7 +285,7 @@ export default function OrdersPage() {
                         ₹{order.amount}
                       </p>
                       <p className={`text-sm font-medium ${getPaymentStatusColor(order.payment_status)}`}>
-                        Payment: {order.payment_status.charAt(0).toUpperCase() + order.payment_status.slice(1)}
+                        Payment: {order.payment_status.charAt(0).toUpperCase() + order.payment_status.slice(1).replace('_', ' ')}
                       </p>
                       {order.payment_method && (
                         <p className="text-xs text-gray-500 mt-1">
@@ -224,6 +333,39 @@ export default function OrdersPage() {
                     </p>
                   </div>
                 )}
+
+                {/* Cancel Button */}
+                <div className="p-6 border-t border-gray-200">
+                  {canCancelOrder(order) ? (
+                    <div>
+                      <button
+                        onClick={() => handleCancelOrder(order.id)}
+                        disabled={cancellingOrder === order.id}
+                        className="w-full sm:w-auto px-6 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        {cancellingOrder === order.id ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Cancelling...
+                          </span>
+                        ) : (
+                          'Cancel Order'
+                        )}
+                      </button>
+                      <p className="mt-2 text-xs text-gray-500">
+                        {getCancellationMessage(order)}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="text-sm text-gray-600">
+                      <p className="font-medium text-gray-700 mb-1">Cancellation not available</p>
+                      <p className="text-xs text-gray-500">{getCancellationMessage(order)}</p>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>

@@ -99,10 +99,10 @@ export default function ProductCard({ product }: ProductCardProps) {
                 <span className="text-gray-500 ml-1 text-xs">({product.rating})</span>
               </div>
             )}
-            <div className="flex items-center justify-between pt-2 border-t border-gray-100 mt-auto">
-              <div>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-2 border-t border-gray-100 mt-auto gap-3">
+              <div className="flex-1">
                 <span className="text-xs text-gray-500 line-through opacity-60">₹{Math.round(product.price * 1.1)}</span>
-                <span className="font-heading font-bold text-xl text-[#2d5016] ml-2">
+                <span className="font-heading font-bold text-lg sm:text-xl text-[#2d5016] ml-2">
                   ₹{product.price}
                 </span>
               </div>
@@ -111,7 +111,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 disabled={isAdding}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-5 py-2.5 bg-gradient-to-r from-[#2d5016] to-[#4a7c2a] text-white rounded-lg text-sm font-semibold hover:from-[#1f3509] hover:to-[#2d5016] disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all duration-200 relative overflow-hidden"
+                className="w-full sm:w-auto px-4 sm:px-5 py-2.5 sm:py-2.5 bg-gradient-to-r from-[#2d5016] to-[#4a7c2a] text-white rounded-lg text-sm font-semibold hover:from-[#1f3509] hover:to-[#2d5016] disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all duration-200 relative overflow-hidden min-h-[44px] touch-manipulation"
               >
                 {/* Ripple effect on click */}
                 {isAdding ? (

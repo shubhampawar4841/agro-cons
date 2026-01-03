@@ -50,3 +50,8 @@ Also make sure your Supabase project has the correct redirect URLs:
 - Don't include a trailing slash
 - After setting the variable, redeploy your application
 
+
+
+
+
+

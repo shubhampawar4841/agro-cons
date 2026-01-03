@@ -20,7 +20,7 @@ interface Order {
   status: 'created' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
   amount: number;
   payment_method: 'upi' | 'card' | 'cod' | null;
-  payment_status: 'pending' | 'paid' | 'failed';
+  payment_status: 'created' | 'authorized' | 'captured' | 'failed' | 'refunded' | 'partially_refunded';
   shipping_address: any;
   created_at: string;
   order_items?: OrderItem[];
@@ -37,11 +37,21 @@ export default function AdminOrdersPage() {
   useEffect(() => {
     const checkAdminAndFetchOrders = async () => {
       try {
-        // Check for user session
-        const { data: { session } } = await supabase.auth.getSession();
+        // Check for user session - use getUser() for fresh session
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
         
-        if (!session) {
-          router.push('/');
+        if (userError || !user) {
+          console.error('No user session:', userError);
+          router.push('/login');
+          return;
+        }
+
+        // Get fresh session
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError || !session) {
+          console.error('No session available:', sessionError);
+          router.push('/login');
           return;
         }
 
@@ -49,7 +59,7 @@ export default function AdminOrdersPage() {
         const { data: profile } = await supabase
           .from('profiles')
           .select('role')
-          .eq('id', session.user.id)
+          .eq('id', user.id)
           .single();
 
         if (!profile || profile.role !== 'admin') {
@@ -60,8 +70,36 @@ export default function AdminOrdersPage() {
 
         setIsAdmin(true);
 
-        // Get access token
-        const accessToken = session.access_token;
+        // Get access token - Supabase v2 uses access_token
+        let accessToken: string | undefined = session.access_token;
+        
+        // Debug logging
+        console.log('Session check:', {
+          hasSession: !!session,
+          hasAccessToken: !!accessToken,
+          tokenLength: accessToken?.length,
+        });
+        
+        // If token is missing, try to refresh session
+        if (!accessToken) {
+          console.log('Access token missing, attempting to refresh session...');
+          const { data: { session: refreshedSession }, error: refreshError } = await supabase.auth.refreshSession(session);
+          if (refreshError || !refreshedSession) {
+            console.error('Failed to refresh session:', refreshError);
+            alert('Session expired. Please log in again.');
+            router.push('/login');
+            return;
+          }
+          accessToken = refreshedSession.access_token;
+        }
+
+        // Final check - if still no token, redirect to login
+        if (!accessToken) {
+          console.error('No access token available after refresh');
+          alert('Session expired. Please log in again.');
+          router.push('/login');
+          return;
+        }
 
         // Fetch all orders
         const response = await fetch('/api/admin/orders', {
@@ -71,7 +109,36 @@ export default function AdminOrdersPage() {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to fetch orders');
+          const errorData = await response.json().catch(() => ({}));
+          console.error('Failed to fetch orders:', {
+            status: response.status,
+            statusText: response.statusText,
+            error: errorData,
+          });
+          
+          if (response.status === 401) {
+            // Token expired or invalid - try refreshing one more time
+            console.log('401 error - attempting to refresh session again...');
+            const { data: { session: refreshedSession }, error: refreshError } = await supabase.auth.refreshSession(session);
+            if (!refreshError && refreshedSession?.access_token) {
+              // Retry with new token
+              const retryResponse = await fetch('/api/admin/orders', {
+                headers: {
+                  'Authorization': `Bearer ${refreshedSession.access_token}`,
+                },
+              });
+              if (retryResponse.ok) {
+                const data = await retryResponse.json();
+                setOrders(data.orders || []);
+                return;
+              }
+            }
+            alert('Session expired. Please log in again.');
+            router.push('/login');
+            return;
+          }
+          
+          throw new Error(errorData.error || 'Failed to fetch orders');
         }
 
         const data = await response.json();
@@ -91,14 +158,29 @@ export default function AdminOrdersPage() {
     try {
       setUpdatingOrder(orderId);
 
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session) {
+        alert('Session expired. Please refresh the page.');
+        return;
+      }
+      
+      let accessToken: string | undefined = session.access_token;
+      if (!accessToken) {
+        const { data: { session: refreshedSession } } = await supabase.auth.refreshSession(session);
+        accessToken = refreshedSession?.access_token;
+      }
+      
+      if (!accessToken) {
+        alert('Session expired. Please log in again.');
+        router.push('/login');
+        return;
+      }
 
-      const response = await fetch('/api/admin/update-order-status', {
+        const response = await fetch('/api/admin/update-order-status', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           orderId,
@@ -113,7 +195,7 @@ export default function AdminOrdersPage() {
       // Refresh orders
       const ordersResponse = await fetch('/api/admin/orders', {
         headers: {
-          'Authorization': `Bearer ${session.access_token}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
       });
 
@@ -143,6 +225,23 @@ export default function AdminOrdersPage() {
         return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getPaymentStatusColor = (status: string) => {
+    switch (status) {
+      case 'captured':
+      case 'authorized':
+        return 'text-green-600 font-semibold';
+      case 'created':
+        return 'text-yellow-600 font-semibold';
+      case 'failed':
+        return 'text-red-600 font-semibold';
+      case 'refunded':
+      case 'partially_refunded':
+        return 'text-orange-600 font-semibold';
+      default:
+        return 'text-gray-600 font-semibold';
     }
   };
 
@@ -235,8 +334,8 @@ export default function AdminOrdersPage() {
                   <div className="space-y-3">
                     <div>
                       <p className="text-xs text-gray-500 mb-1">Payment Status</p>
-                      <p className="text-sm font-medium text-gray-900">
-                        {order.payment_status.charAt(0).toUpperCase() + order.payment_status.slice(1)} 
+                      <p className={`text-sm font-medium ${getPaymentStatusColor(order.payment_status)}`}>
+                        {order.payment_status.charAt(0).toUpperCase() + order.payment_status.slice(1).replace('_', ' ')} 
                         {order.payment_method && ` (${order.payment_method.toUpperCase()})`}
                       </p>
                     </div>
@@ -357,7 +456,9 @@ export default function AdminOrdersPage() {
                     <div>
                       <p className="text-gray-600">Payment Status</p>
                       <p className="font-medium text-gray-900">
-                        {selectedOrder.payment_status.charAt(0).toUpperCase() + selectedOrder.payment_status.slice(1)}
+                        <span className={getPaymentStatusColor(selectedOrder.payment_status)}>
+                          {selectedOrder.payment_status.charAt(0).toUpperCase() + selectedOrder.payment_status.slice(1).replace('_', ' ')}
+                        </span>
                       </p>
                     </div>
                     <div>

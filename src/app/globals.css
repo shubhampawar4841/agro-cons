@@ -307,6 +307,17 @@ input[type="button"]:active {
     padding-left: 1rem;
     padding-right: 1rem;
   }
+  
+  /* Touch-friendly interactions */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Better button spacing on mobile */
+  button {
+    padding: 0.75rem 1rem;
+  }
 }
 
 /* Safe area for mobile devices with notches */
