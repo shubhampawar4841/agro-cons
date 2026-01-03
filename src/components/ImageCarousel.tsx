@@ -55,7 +55,7 @@ export default function ImageCarousel({ images, alt, className = '', showArrowsO
           src={images[currentIndex]}
           alt={`${alt} - Image ${currentIndex + 1}`}
           fill
-          className="object-cover"
+          className="object-contain"
           onError={() => handleImageError(currentIndex)}
           unoptimized={images[currentIndex].includes('supabase.co')}
         />

@@ -80,10 +80,10 @@ export default function ProductCard({ product }: ProductCardProps) {
     >
       <Link href={`/products/${(product as any).slug || product.id}`}>
         <div className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover-lift group cursor-pointer h-full flex flex-col">
-          {/* Image container with scale animation */}
-          <div className="relative w-full h-56 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
-            <div className="product-image-hover h-full">
-              <ImageCarousel images={images} alt={product.name} className="h-full" />
+          {/* Image container with scale animation - Adjusted for 832x1248 portrait images */}
+          <div className="relative w-full bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden" style={{ aspectRatio: '832 / 1248', minHeight: '280px' }}>
+            <div className="product-image-hover h-full w-full">
+              <ImageCarousel images={images} alt={product.name} className="h-full w-full" />
             </div>
             {/* Overlay gradient on hover */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/0 to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-300 pointer-events-none"></div>
