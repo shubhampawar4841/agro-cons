@@ -64,13 +64,13 @@ export default function BannerSlideshow({
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-gray-100"
+      className="relative w-full overflow-hidden"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
-      {/* SLIDES */}
+      {/* SLIDES - Full Width with 1200x628 aspect ratio */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentIndex}
@@ -79,14 +79,15 @@ export default function BannerSlideshow({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
           className="relative w-full"
+          style={{ aspectRatio: '1200 / 628' }}
         >
-<div className="relative w-full h-[38vh] sm:h-[55vh] md:h-[600px] lg:h-[700px]">
-<Image
+          <div className="relative w-full h-full">
+            <Image
               src={images[currentIndex]}
               alt={`Banner ${currentIndex + 1}`}
               fill
               priority={currentIndex === 0}
-    className="object-contain"
+              className="object-cover"
               sizes="100vw"
               quality={90}
             />
