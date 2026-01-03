@@ -220,13 +220,11 @@ export async function POST(req: Request) {
           const refundAmountInPaise = Math.round(order.amount * 100);
           
           // Log refund attempt details for debugging
-          console.log('Attempting Razorpay refund:', {
+          console.log('Processing refund:', {
             payment_id: order.razorpay_payment_id,
             amount_in_paise: refundAmountInPaise,
             amount_in_rupees: order.amount,
             order_id: orderId,
-            razorpay_key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID?.substring(0, 10) + '...', // Log first 10 chars only
-            is_test_mode: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID?.startsWith('rzp_test_'),
           });
           
           // Declare paymentDetails outside try block for error logging
@@ -286,37 +284,22 @@ export async function POST(req: Request) {
               throw new Error(`Refund amount (${refundAmountInPaise}) exceeds refundable amount (${refundableAmount})`);
             }
 
-            // Try refund using direct REST API (more reliable than SDK)
+            // Process NORMAL refund only (best practice - banks handle timing)
             let razorpayRefund: any;
             
-            // Strategy 1: Try instant refund via REST API (speed: 'optimum')
             try {
-              console.log('Attempting instant refund via REST API (speed: optimum)...');
-              razorpayRefund = await refundViaREST(order.razorpay_payment_id, refundAmountInPaise, 'optimum');
-              console.log('✅ Instant refund successful!', razorpayRefund.id);
-            } catch (instantError: any) {
-              console.log('Instant refund failed, trying normal refund via REST API...', instantError.error?.description || instantError.message);
-              
-              // Strategy 2: Try normal refund via REST API (no speed parameter)
-              try {
-                console.log('Attempting normal refund via REST API...');
-                razorpayRefund = await refundViaREST(order.razorpay_payment_id, refundAmountInPaise);
-                console.log('✅ Normal refund successful!', razorpayRefund.id);
-              } catch (normalError: any) {
-                console.log('Normal refund via REST failed, trying SDK method...', normalError.error?.description || normalError.message);
-                
-                // Strategy 3: Fallback to SDK method
-                try {
-                  console.log('Attempting refund via SDK...');
-                  razorpayRefund = await razorpay.payments.refund(order.razorpay_payment_id, {
-                    amount: refundAmountInPaise,
-                  });
-                  console.log('✅ Refund via SDK successful!', razorpayRefund.id);
-                } catch (sdkError: any) {
-                  console.error('All refund methods failed');
-                  throw sdkError; // Re-throw if all methods fail
-                }
-              }
+              console.log('Processing NORMAL refund...');
+              razorpayRefund = await refundViaREST(order.razorpay_payment_id, refundAmountInPaise);
+              refundProcessed = true;
+              console.log('✅ Refund initiated:', razorpayRefund.id);
+            } catch (error: any) {
+              console.error('❌ Refund initiation failed:', {
+                statusCode: error.statusCode,
+                error: error.error,
+                payment_id: order.razorpay_payment_id,
+              });
+              // Continue order cancellation even if refund fails
+              throw error; // Re-throw to be caught by outer catch
             }
 
             // Update refund record if it was created
@@ -352,11 +335,8 @@ export async function POST(req: Request) {
             }
           }
 
-          // Check if we're in test mode
-          const isTestMode = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID?.startsWith('rzp_test_');
-          
           // Log detailed error information
-          console.error('❌ All refund attempts failed. Final error:', {
+          console.error('❌ Refund initiation failed:', {
             statusCode: razorpayError.statusCode,
             error: razorpayError.error,
             message: razorpayError.message,
@@ -365,20 +345,15 @@ export async function POST(req: Request) {
             payment_status: paymentDetails?.status,
             payment_method: paymentDetails?.method,
             payment_amount: paymentDetails?.amount,
-            is_test_mode: isTestMode,
-            full_error: JSON.stringify(razorpayError, null, 2),
           });
           
-          // In test mode, this is EXPECTED behavior, not an error
-          if (isTestMode && razorpayError.statusCode === 400 && razorpayError.error?.code === 'BAD_REQUEST_ERROR') {
-            console.warn('⚠️ TEST MODE LIMITATION: Refunds often fail in Razorpay test mode, especially for netbanking.');
-            console.warn('   This is NORMAL behavior. Refunds will work in LIVE mode.');
-            console.warn('   The refund will be processed via webhook when Razorpay processes it asynchronously.');
-          } else if (razorpayError.statusCode === 400 && razorpayError.error?.code === 'BAD_REQUEST_ERROR') {
+          // Log possible causes for debugging
+          if (razorpayError.statusCode === 400 && razorpayError.error?.code === 'BAD_REQUEST_ERROR') {
             console.error('⚠️ Possible causes:');
             console.error('  1. Refunds not enabled in Razorpay account');
             console.error('  2. Payment method does not support refunds');
             console.error('  3. Payment too old for refund');
+            console.error('  4. Test mode limitations (if in test mode)');
           }
 
           // Continue with cancellation even if refund fails
@@ -416,18 +391,14 @@ export async function POST(req: Request) {
       );
     }
 
-    // Determine message based on refund status and test mode
-    const isTestMode = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID?.startsWith('rzp_test_');
+    // Determine message based on refund status
     let message: string;
     
     if (refundProcessed) {
-      message = 'Order cancelled and refund processed successfully. Amount will be credited within 3-5 business days.';
-    } else if (isTestMode && order.payment_status === 'captured' && order.razorpay_payment_id) {
-      // In test mode, refund may fail but will be processed via webhook
-      message = 'Order cancelled. Refund has been initiated and will be processed. Amount will be credited within 3-5 business days.';
+      message = 'Order cancelled successfully. Refund has been initiated and will be credited within 1-5 working days depending on your bank.';
     } else if (order.payment_status === 'captured' && order.razorpay_payment_id) {
-      // Refund failed but order cancelled - manual processing may be needed
-      message = 'Order cancelled. Refund initiation may require manual processing. Please contact support if you need assistance.';
+      // Refund failed but order cancelled - show user-friendly message
+      message = 'Order cancelled successfully. Refund initiation may require manual processing. Please contact support if you need assistance.';
     } else {
       message = 'Order cancelled successfully.';
     }
@@ -437,8 +408,6 @@ export async function POST(req: Request) {
       order: updatedOrder,
       refundProcessed,
       message,
-      // Include test mode info for frontend
-      isTestMode: isTestMode && !refundProcessed,
     });
   } catch (error: any) {
     console.error('Cancel order error:', error);

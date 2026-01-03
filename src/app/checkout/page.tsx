@@ -28,7 +28,8 @@ interface Address {
 export default function CheckoutPage() {
   const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [deliveryCharge] = useState(50);
+  // const [deliveryCharge] = useState(50); // Commented out - free delivery for now
+  const [deliveryCharge] = useState(0);
   const [user, setUser] = useState<any>(null);
   const [savedAddresses, setSavedAddresses] = useState<Address[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);

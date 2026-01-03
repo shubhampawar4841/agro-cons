@@ -7,9 +7,22 @@ import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import TrustBadge from '@/components/TrustBadge';
 import ProductCard from '@/components/ProductCard';
+import ProductSlideshow from '@/components/ProductSlideshow';
 import GeneralAIAssistant from '@/components/GeneralAIAssistant';
 
 interface Product {
+  id: string;
+  name: string;
+  slug: string;
+  price: number | string;
+  weight: string;
+  image_url: string;
+  rating?: number;
+  images?: string[];
+  description?: string | null;
+}
+
+interface FeaturedProduct {
   id: string;
   name: string;
   slug: string;
@@ -17,12 +30,92 @@ interface Product {
   weight: string;
   image_url: string;
   rating?: number;
+  images?: string[];
+  description?: string | null;
+}
+
+interface SlideshowProduct {
+  id: string;
+  name: string;
+  slug: string;
+  price: string;
+  weight: string;
+  image_url: string;
+  images?: string[];
+  description?: string | null;
 }
 
 export default function Home() {
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [featuredProducts, setFeaturedProducts] = useState<FeaturedProduct[]>([]);
+  const [slideshowProducts, setSlideshowProducts] = useState<SlideshowProduct[]>([]);
+
+  // Hardcoded slideshow products as provided by user
+  const defaultSlideshowProducts: SlideshowProduct[] = [
+    {
+      id: "9d5a8afc-df07-4fb5-bb5f-d44f3adb5054",
+      name: "Moringa Powder",
+      slug: "moringa-powder",
+      description: null,
+      price: "249.00",
+      weight: "200g",
+      image_url: "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767339915169-36qbume3iwy.jpeg",
+      images: [
+        "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767339915169-36qbume3iwy.jpeg",
+        "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767342599380-bizv9tp8yd4.jpeg",
+        "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767342601204-iuhxisdaki.jpeg",
+        "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767342603259-pewn0ta9ohp.jpeg",
+        "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767342605530-pctdlejq8w.jpeg"
+      ]
+    },
+    {
+      id: "897bfead-1b1d-4864-9002-329510f8682f",
+      name: "Organic Ashwagandha Powder",
+      slug: "organic-ashwagandha-powder",
+      description: null,
+      price: "599.00",
+      weight: "200g",
+      image_url: "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767338680252-elkvo5d0hs.jpeg",
+      images: [
+        "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767338680252-elkvo5d0hs.jpeg",
+        "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767431182674-i4fr2if0x5.jpeg",
+        "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767431186444-v8rtvoxhqd7.jpeg",
+        "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767431188991-twj6b16hns8.jpeg",
+        "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767431191156-z1652ul7ibm.jpeg"
+      ]
+    },
+    {
+      id: "4ba2a2f3-8cb7-4d57-88da-6a303dac0eb6",
+      name: "Organic Toor Dal",
+      slug: "organic-toor-dal",
+      description: "Traditional organic toor dal, staple of Indian cuisine. Rich in protein and essential nutrients.",
+      price: "129.00",
+      weight: "500g",
+      image_url: "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1766653426070-t0a6krql7ur.jpg",
+      images: [
+        "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1766653426070-t0a6krql7ur.jpg"
+      ]
+    },
+    {
+      id: "2c8fa3f5-6605-4de2-aa44-dfd5dc4cbf50",
+      name: "Organic Beetroot Powder",
+      slug: "organic-beetroot-powder",
+      description: "Premium organic beetroot powder, rich in nutrients and antioxidants.",
+      price: "149.00",
+      weight: "100g",
+      image_url: "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767431085085-gs6h61m3ptv.jpeg",
+      images: [
+        "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767431085085-gs6h61m3ptv.jpeg",
+        "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767431087768-o83hbl4qwz9.jpeg",
+        "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767431089566-mwopd1wso4q.jpeg",
+        "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767431091987-ih59rvbrqeg.jpeg",
+        "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767431094119-vsyhyyctoip.jpeg",
+        "https://ewvcnnnwtuamerqsdxte.supabase.co/storage/v1/object/public/product-image/products/1767431096506-j6ds4u0hrjh.jpeg"
+      ]
+    }
+  ];
 
   useEffect(() => {
+    setSlideshowProducts(defaultSlideshowProducts);
     fetchProducts();
   }, []);
 
@@ -31,8 +124,9 @@ export default function Home() {
       const response = await fetch('/api/products');
       if (response.ok) {
         const data = await response.json();
-        const productsWithRating = (data.products || []).slice(0, 4).map((p: Product) => ({
+        const productsWithRating = (data.products || []).slice(0, 4).map((p: any) => ({
           ...p,
+          price: typeof p.price === 'string' ? parseFloat(p.price) : p.price,
           rating: 4.5,
         }));
         setFeaturedProducts(productsWithRating);
@@ -46,93 +140,19 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#2d5016]/5 via-[#f4d03f]/10 to-[#2d5016]/5 py-16 md:py-24 overflow-hidden">
-        {/* Decorative background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#2d5016]/5 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#f4d03f]/10 rounded-full blur-3xl"></div>
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            {/* Hero content with staggered animations */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-            >
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="inline-block mb-4 px-4 py-2 bg-[#2d5016]/10 rounded-full border border-[#2d5016]/20"
-              >
-                <span className="text-sm font-semibold text-[#2d5016]">🌱 100% Organic</span>
-              </motion.div>
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#2d5016] mb-4 sm:mb-6 leading-tight"
-              >
-                Pure, Organic Agro Products from{' '}
-                <span className="text-[#4a7c2a]">AGRICORNS</span>
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="text-base sm:text-lg md:text-xl text-gray-700 mb-6 sm:mb-8 leading-relaxed"
-              >
-                Discover premium quality organic products sourced directly from Indian farms. 
-                Every product is carefully selected for purity and quality assurance.
-              </motion.p>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="flex flex-col sm:flex-row gap-3 sm:gap-4"
-              >
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Link
-                    href="/products"
-                    className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#2d5016] to-[#4a7c2a] text-white rounded-xl font-heading font-semibold text-base sm:text-lg hover:from-[#1f3509] hover:to-[#2d5016] shadow-xl hover:shadow-2xl transition-all duration-200 min-h-[48px] w-full sm:w-auto touch-manipulation"
-                  >
-                    Shop Now
-                    <svg className="ml-2 w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </Link>
-                </motion.div>
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Link
-                    href="/about"
-                    className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-white border-2 border-[#2d5016] text-[#2d5016] rounded-xl font-heading font-semibold text-base sm:text-lg hover:bg-[#2d5016] hover:text-white shadow-lg hover:shadow-xl transition-all duration-200 min-h-[48px]"
-                  >
-                    Learn More
-                  </Link>
-                </motion.div>
-              </motion.div>
-            </motion.div>
-            {/* Hero image with fade and scale animation */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="relative h-64 md:h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl group"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-[#2d5016]/20 to-transparent z-10"></div>
-              <Image
-                src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=800&h=600&fit=crop"
-                alt="Organic agro products"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-110"
-                priority
-              />
-            </motion.div>
-          </div>
-        </div>
+      {/* Hero Section with Product Slideshow - Full Width */}
+      <section className="relative w-full overflow-hidden">
+        {/* Product Slideshow - Full Width */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.7 }}
+          className="w-full"
+        >
+          {slideshowProducts.length > 0 && (
+            <ProductSlideshow products={slideshowProducts} autoPlayInterval={5000} />
+          )}
+        </motion.div>
       </section>
 
       {/* Trust Icons Section with scroll animation */}

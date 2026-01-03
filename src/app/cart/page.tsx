@@ -19,7 +19,8 @@ interface CartItem {
 export default function CartPage() {
   const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [deliveryCharge, setDeliveryCharge] = useState(50);
+  // const [deliveryCharge, setDeliveryCharge] = useState(50); // Commented out - free delivery for now
+  const [deliveryCharge, setDeliveryCharge] = useState(0);
 
   useEffect(() => {
     const cart = localStorage.getItem('cart');

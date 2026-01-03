@@ -485,4 +485,246 @@ input[type="button"]:active {
     height: 4rem;
   }
 }
+.paper-texture::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* Product Slideshow Animations */
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInFromRight 0.6s ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slideInFromLeft 0.6s ease-out;
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 0.7s ease-out;
+}
+
+/* Product Slideshow Enhanced Styles */
+.slideshow-container {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+}
+
+@media (min-width: 768px) {
+  .slideshow-container {
+    border-radius: 1.5rem;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+}
+
+.slideshow-image {
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slideshow-container:hover .slideshow-image {
+  transform: scale(1.05);
+}
+
+.slideshow-nav-btn {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slideshow-nav-btn:hover {
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.slideshow-nav-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.slideshow-dot {
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.slideshow-dot:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.4);
+}
+
+.slideshow-progress {
+  box-shadow: 0 -2px 10px rgba(244, 208, 63, 0.5);
+  background: linear-gradient(90deg, 
+    rgba(244, 208, 63, 0.8) 0%, 
+    rgba(255, 255, 255, 0.9) 50%, 
+    rgba(244, 208, 63, 0.8) 100%);
+}
+
+.product-showcase {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    inset 0 0 50px rgba(255, 255, 255, 0.1);
+}
+
+.product-showcase img {
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slideshow-container:hover .product-showcase img {
+  transform: scale(1.05) rotate(1deg);
+}
+
+/* Enhanced text readability */
+.slideshow-container h2 {
+  text-shadow: 
+    0 2px 10px rgba(0, 0, 0, 0.5),
+    0 4px 20px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.02em;
+}
+
+.slideshow-container p {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .slideshow-container {
+    height: 500px !important;
+  }
+  
+  .slideshow-nav-btn {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .slideshow-container h2 {
+    font-size: 2rem;
+  }
+}
+
+/* Product Slideshow Mobile Enhancements */
+@media (max-width: 640px) {
+  /* Ensure touch targets are large enough */
+  button[aria-label*="product"],
+  button[aria-label*="slide"] {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  /* Better spacing for mobile slideshow */
+  .slideshow-container,
+  section[class*="min-h-"] {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  /* Prevent text size adjustment on iOS */
+  .slideshow-container input,
+  .slideshow-container textarea,
+  .slideshow-container select {
+    font-size: 16px !important;
+  }
+  
+  /* Better image sizing on mobile */
+  .slideshow-image {
+    object-position: center center;
+  }
+  
+  /* Improve button visibility on mobile */
+  .slideshow-nav-btn {
+    background: rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  }
+  
+  /* Better indicator dots on mobile */
+  .slideshow-dot {
+    min-width: 8px;
+    min-height: 8px;
+  }
+}
+
+/* Prevent horizontal scroll on mobile */
+@media (max-width: 1024px) {
+  .slideshow-container,
+  section[class*="min-h-"] {
+    overflow-x: hidden;
+  }
+}
+
+/* Touch-friendly interactions */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Smooth scrolling for mobile */
+@media (max-width: 768px) {
+  html {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Smooth transitions for all slideshow elements */
+.slideshow-container * {
+  will-change: transform, opacity;
+}
+
+/* Glow effect on active dot */
+.slideshow-dot:not(:hover) {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 2px 12px rgba(255, 255, 255, 0.5);
+  }
+}
 
