@@ -80,8 +80,8 @@ export default function BannerSlideshow({
           transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
           className="relative w-full"
         >
-          <div className="relative w-full h-[50vh] sm:h-[60vh] md:h-[600px] lg:h-[700px]">
-            <Image
+<div className="relative w-full h-[38vh] sm:h-[55vh] md:h-[600px] lg:h-[700px]">
+<Image
               src={images[currentIndex]}
               alt={`Banner ${currentIndex + 1}`}
               fill

@@ -72,7 +72,8 @@ export default function Home() {
       <Navbar />
 
       {/* Banner Slideshow - Full Width */}
-      <section className="relative w-full overflow-hidden">
+{/* Banner Slideshow - Full Width */}
+<section className="relative w-full overflow-hidden -mt-[64px] sm:mt-0">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
